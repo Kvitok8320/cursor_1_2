@@ -31,12 +31,19 @@
       background: var(--bg-color);
       color: var(--text-color);
       display: flex;
-      flex-direction: column;
+      flex-direction: row;
       justify-content: center;
       align-items: center;
       height: 100vh;
       margin: 0;
+      gap: 20px;
       transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    .container {
+      display: flex;
+      gap: 20px;
+      align-items: flex-start;
     }
 
     .theme-toggle {
@@ -145,41 +152,218 @@
     .btn-clear:hover {
       background: #cc0000;
     }
+
+    .history-panel {
+      background: var(--calc-bg);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px var(--shadow);
+      width: 300px;
+      max-height: 500px;
+      display: flex;
+      flex-direction: column;
+      transition: background 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .history-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid var(--display-border);
+    }
+
+    .history-title {
+      font-size: 18px;
+      font-weight: bold;
+      color: var(--text-color);
+    }
+
+    .btn-clear-history {
+      background: #ff6b6b;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 6px 12px;
+      font-size: 12px;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .btn-clear-history:hover {
+      background: #ff5252;
+    }
+
+    .history-list {
+      overflow-y: auto;
+      flex: 1;
+      max-height: 400px;
+    }
+
+    .history-item {
+      padding: 10px;
+      margin-bottom: 8px;
+      background: var(--display-bg);
+      border: 1px solid var(--display-border);
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      word-break: break-all;
+    }
+
+    .history-item:hover {
+      background: var(--btn-hover);
+      transform: translateX(5px);
+    }
+
+    .history-expression {
+      font-size: 14px;
+      color: var(--text-color);
+      margin-bottom: 4px;
+    }
+
+    .history-result {
+      font-size: 16px;
+      font-weight: bold;
+      color: #4caf50;
+    }
+
+    .history-empty {
+      text-align: center;
+      color: var(--text-color);
+      opacity: 0.5;
+      padding: 20px;
+      font-style: italic;
+    }
+
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+        padding: 20px;
+      }
+      
+      .container {
+        flex-direction: column;
+      }
+      
+      .history-panel {
+        width: 260px;
+        max-height: 300px;
+      }
+    }
   </style>
 </head>
 <body>
   <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Переключить тему"></button>
-  <div class="calculator">
-    <input type="text" class="display" id="display" readonly />
+  <div class="container">
+    <div class="calculator">
+      <input type="text" class="display" id="display" readonly />
 
-    <div class="buttons">
-      <button onclick="appendSymbol('7')">7</button>
-      <button onclick="appendSymbol('8')">8</button>
-      <button onclick="appendSymbol('9')">9</button>
-      <button class="btn-operator" onclick="appendSymbol('/')">/</button>
+      <div class="buttons">
+        <button onclick="appendSymbol('7')">7</button>
+        <button onclick="appendSymbol('8')">8</button>
+        <button onclick="appendSymbol('9')">9</button>
+        <button class="btn-operator" onclick="appendSymbol('/')">/</button>
 
-      <button onclick="appendSymbol('4')">4</button>
-      <button onclick="appendSymbol('5')">5</button>
-      <button onclick="appendSymbol('6')">6</button>
-      <button class="btn-operator" onclick="appendSymbol('*')">*</button>
+        <button onclick="appendSymbol('4')">4</button>
+        <button onclick="appendSymbol('5')">5</button>
+        <button onclick="appendSymbol('6')">6</button>
+        <button class="btn-operator" onclick="appendSymbol('*')">*</button>
 
-      <button onclick="appendSymbol('1')">1</button>
-      <button onclick="appendSymbol('2')">2</button>
-      <button onclick="appendSymbol('3')">3</button>
-      <button class="btn-operator" onclick="appendSymbol('-')">-</button>
+        <button onclick="appendSymbol('1')">1</button>
+        <button onclick="appendSymbol('2')">2</button>
+        <button onclick="appendSymbol('3')">3</button>
+        <button class="btn-operator" onclick="appendSymbol('-')">-</button>
 
-      <button onclick="appendSymbol('0')">0</button>
-      <button onclick="appendSymbol('.')">.</button>
-      <button class="btn-operator" onclick="appendSymbol('+')">+</button>
-      <button onclick="backspace()">⌫</button>
+        <button onclick="appendSymbol('0')">0</button>
+        <button onclick="appendSymbol('.')">.</button>
+        <button class="btn-operator" onclick="appendSymbol('+')">+</button>
+        <button onclick="backspace()">⌫</button>
 
-      <button class="btn-clear" onclick="clearDisplay()">C</button>
-      <button class="btn-equal" onclick="calculate()">=</button>
+        <button class="btn-clear" onclick="clearDisplay()">C</button>
+        <button class="btn-equal" onclick="calculate()">=</button>
+      </div>
+    </div>
+
+    <div class="history-panel">
+      <div class="history-header">
+        <div class="history-title">Журнал операций</div>
+        <button class="btn-clear-history" onclick="clearHistory()">Очистить</button>
+      </div>
+      <div class="history-list" id="historyList">
+        <div class="history-empty">История операций пуста</div>
+      </div>
     </div>
   </div>
 
   <script>
     const display = document.getElementById('display');
+    const historyList = document.getElementById('historyList');
+    let operationHistory = [];
+
+    // Загрузка истории из localStorage
+    function loadHistory() {
+      const savedHistory = localStorage.getItem('operationHistory');
+      if (savedHistory) {
+        operationHistory = JSON.parse(savedHistory);
+        renderHistory();
+      }
+    }
+
+    // Сохранение истории в localStorage
+    function saveHistory() {
+      localStorage.setItem('operationHistory', JSON.stringify(operationHistory));
+    }
+
+    // Добавление операции в журнал
+    function addToHistory(expression, result) {
+      const historyItem = {
+        expression: expression,
+        result: result,
+        timestamp: new Date().toLocaleTimeString('ru-RU')
+      };
+      operationHistory.unshift(historyItem); // Добавляем в начало
+      
+      // Ограничиваем историю 50 записями
+      if (operationHistory.length > 50) {
+        operationHistory = operationHistory.slice(0, 50);
+      }
+      
+      saveHistory();
+      renderHistory();
+    }
+
+    // Отрисовка истории
+    function renderHistory() {
+      if (operationHistory.length === 0) {
+        historyList.innerHTML = '<div class="history-empty">История операций пуста</div>';
+        return;
+      }
+
+      historyList.innerHTML = operationHistory.map((item, index) => `
+        <div class="history-item" onclick="useHistoryResult(${index})">
+          <div class="history-expression">${item.expression}</div>
+          <div class="history-result">= ${item.result}</div>
+        </div>
+      `).join('');
+    }
+
+    // Использование результата из истории
+    function useHistoryResult(index) {
+      if (operationHistory[index]) {
+        display.value = operationHistory[index].result;
+      }
+    }
+
+    // Очистка истории
+    function clearHistory() {
+      if (confirm('Очистить весь журнал операций?')) {
+        operationHistory = [];
+        saveHistory();
+        renderHistory();
+      }
+    }
 
     // Функция переключения темы
     function toggleTheme() {
@@ -196,8 +380,9 @@
       document.documentElement.setAttribute('data-theme', savedTheme);
     }
 
-    // Загружаем тему при загрузке страницы
+    // Загружаем тему и историю при загрузке страницы
     loadTheme();
+    loadHistory();
 
     function appendSymbol(symbol) {
       display.value += symbol;
@@ -214,9 +399,15 @@
     function calculate() {
       if (!display.value) return;
       try {
+        const expression = display.value;
         // Простейший способ – eval, для учебного примера ок
-        const result = eval(display.value);
+        const result = eval(expression);
         display.value = result;
+        
+        // Добавляем в историю только если выражение и результат разные
+        if (expression !== String(result)) {
+          addToHistory(expression, result);
+        }
       } catch (e) {
         alert('Ошибка в выражении');
       }
