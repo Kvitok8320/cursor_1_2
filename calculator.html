@@ -257,6 +257,16 @@
 <body>
   <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="Переключить тему"></button>
   <div class="container">
+    <div class="history-panel">
+      <div class="history-header">
+        <div class="history-title">Журнал операций</div>
+        <button class="btn-clear-history" onclick="clearHistory()">Очистить</button>
+      </div>
+      <div class="history-list" id="historyList">
+        <div class="history-empty">История операций пуста</div>
+      </div>
+    </div>
+
     <div class="calculator">
       <input type="text" class="display" id="display" readonly />
 
@@ -283,16 +293,6 @@
 
         <button class="btn-clear" onclick="clearDisplay()">C</button>
         <button class="btn-equal" onclick="calculate()">=</button>
-      </div>
-    </div>
-
-    <div class="history-panel">
-      <div class="history-header">
-        <div class="history-title">Журнал операций</div>
-        <button class="btn-clear-history" onclick="clearHistory()">Очистить</button>
-      </div>
-      <div class="history-list" id="historyList">
-        <div class="history-empty">История операций пуста</div>
       </div>
     </div>
   </div>
